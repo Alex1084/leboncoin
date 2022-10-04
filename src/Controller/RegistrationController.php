@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -68,13 +69,20 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/verify/email', name: 'app_verify_email')]
-    public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response
+    public function verifyUserEmail(Request $request, TranslatorInterface $translator, UserRepository $userRepository): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
+        // $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $id = $request->get("id");
         // validate email confirmation link, sets User::isVerified=true and persists
+        if ($id === null) {
+            $this->redirectToRoute("app_home");
+        }
+        $user = $userRepository->find($id);
+        if ($user === null) {
+            $this->redirectToRoute("app_home");
+        }
         try {
-            $this->emailVerifier->handleEmailConfirmation($request, $this->getUser());
+            $this->emailVerifier->handleEmailConfirmation($request, $user);
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
 
