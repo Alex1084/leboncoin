@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CityController!{% endblock %}
+
+{% block body %}
+
+{{ form_start(cityForm) }}
+	{{ form_row(cityForm.city_name) }}
+	{{ form_row(cityForm.zipcode) }}
+	<button type="submit" class="btn">Save</button>
+{{ form_end(cityForm) }}
+
+{% endblock %}
