@@ -16,10 +16,10 @@ class CityController extends AbstractController
     #[Route('/city', name: 'app_city')]
     public function index(ManagerRegistry $doctrine): Response
     {
-        $city = $doctrine->getRepository(City::class)->findAll();
+        $cities = $doctrine->getRepository(City::class)->findAll();
 
         return $this->render('city/index.html.twig', [
-            'controller_name' => 'CityController',
+            'cities' => $cities
         ]);
     }
 

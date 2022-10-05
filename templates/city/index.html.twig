@@ -1,9 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello CityController!{% endblock %}
+{% block title %}Liste des villes{% endblock %}
 
 {% block body %}
 
+	<h1>Liste des villes</h1>
 
+	<a href="{{path("app_city_add")}}">Ajouter une ville</a>
+
+	{% for city in cities %}
+		<p>{{city.zipcode}} {{city.cityName}} <a href="{{path("app_city_update",{id : city.getId()})}}">Modifier</a></p>
+	{% endfor %}
 
 {% endblock %}
