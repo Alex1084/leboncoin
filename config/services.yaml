@@ -19,11 +19,18 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+<<<<<<< HEAD
     App\EventSubscriber\VerifyEmailSubscriber:
         tags:
             -   name: kernel.event_subscriber
                 dispatcher: security.event_dispatcher.main
 
+=======
+    App\EventSubscriber\VerifyUserSubscriber :
+        tags:
+            - name : kernel.event_subscriber
+              dispatcher: security.event_dispatcher.main
+>>>>>>> 95f8e04fa8d97be25da41b141619bd67572a4d4d
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
  

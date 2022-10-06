@@ -3,6 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\User;
+<<<<<<< HEAD
+=======
+use App\Form\RegistrationFormType;
+use App\Repository\UserRepository;
+use App\Security\EmailVerifier;
+>>>>>>> 95f8e04fa8d97be25da41b141619bd67572a4d4d
 use DateTimeImmutable;
 use App\Security\EmailVerifier;
 use App\Form\RegistrationFormType;
@@ -73,6 +79,7 @@ class RegistrationController extends AbstractController
     {
         // $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $id = $request->get("id");
+<<<<<<< HEAD
         // validate email confirmation link, sets User::isVerified=true and persists
         if ($id === null) {
             $this->redirectToRoute("app_home");
@@ -82,7 +89,16 @@ class RegistrationController extends AbstractController
             $this->redirectToRoute("app_home");
         }
 
+=======
+>>>>>>> 95f8e04fa8d97be25da41b141619bd67572a4d4d
         // validate email confirmation link, sets User::isVerified=true and persists
+        if ($id === null) {
+            $this->redirectToRoute("app_home");
+        }
+        $user = $userRepository->find($id);
+        if ($user === null) {
+            $this->redirectToRoute("app_home");
+        }
         try {
             $this->emailVerifier->handleEmailConfirmation($request, $user);
         } catch (VerifyEmailExceptionInterface $exception) {

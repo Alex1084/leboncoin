@@ -1,1 +1,31 @@
+<<<<<<< HEAD
 {% extends 'base.html.twig' %}
+=======
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des categories{% endblock %}
+
+{% block body %}
+
+    <h1>Categories</h1>
+    <h2><a href="{{path("app_category_add")}}">Créer une categorie</a></h2>
+    <table>
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>name</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in categories %}
+                <tr>
+                    <td>{{category.id}}</td>
+                    <td>{{category.name}}</td>
+                    <td><a href="{{path("app_category_update", {"id" : category.id})}}">Modifier</a></td>
+                </tr>        
+            {% endfor %}
+        </tbody> 
+    </table>
+{% endblock %}
+>>>>>>> 95f8e04fa8d97be25da41b141619bd67572a4d4d
