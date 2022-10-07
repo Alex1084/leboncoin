@@ -11,5 +11,5 @@
 	{% for city in cities %}
 		<p>{{city.zipcode}} {{city.cityName}} <a href="{{path("app_city_update",{id : city.getId()})}}">Modifier</a></p>
 	{% endfor %}
-
+	
 {% endblock %}

@@ -2,9 +2,13 @@
 
 namespace App\Repository;
 
+use App\Entity\City;
+use App\Entity\User;
 use App\Entity\Article;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\Category;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Article>
@@ -39,28 +43,36 @@ class ArticleRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Article[] Returns an array of Article objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @Route("Route", name="RouteName")
+     */
+    public function search($search = null, $category = null, $city = null)
+    {
+        /*
+         * Requête dans la bdd avec trois paramètres
+         */
+        $query = $this->createQueryBuilder('a') // 'a' est l'alias du repository où il est
+                    ->select("a.name, a.price, a.description, a.id, ci.city_name as citName, ca.name as catName, u.first_name as uName")
+                    ->join(Category::class, 'ca', Join::WITH, "a.category = ca.id")
+                    ->join(City::class, 'ci', Join::WITH, "ci.id = a.city")
+                    ->join(User::class, 'u', Join::WITH, "u.id = a.user");
 
-//    public function findOneBySomeField($value): ?Article
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        if ($category) {
+            $query->where("ca.id = :category") // :nom_param évite les injections sql
+            ->setParameter("category", $category);
+        }
+        
+        if ($city) {
+            $query->andWhere("ci.id = :city")->setParameter("city", $city); // andWhere permet d'ajouter une autre condition sans écraser la précédente
+        }
+              
+        if ($search) {
+            $query->andWhere("a.name LIKE :search")->setParameter("search", "%$search%");
+        }
+        
+        return $query   ->getQuery() // Génère la requête
+                        ->getResult(); // Renvoie les résultats
+    }
+
+
 }

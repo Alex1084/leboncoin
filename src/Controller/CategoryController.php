@@ -26,18 +26,18 @@ class CategoryController extends AbstractController
     }
 
     #[Route("/add", name : "add")]
-
     public function addCategory(Request $request, EntityManagerInterface $em, ManagerRegistry $doctrine)
     {
         $category = new Category();
         $categoryForm = $this->createForm(CategoryFormType::class, $category);
-
         $categoryForm->handleRequest($request);
+
         if ($categoryForm->isSubmitted() && $categoryForm->isValid()) {
             $em->persist($category);
             $em->flush();
             return $this->redirectToRoute("app_category_list");
         }
+
         return $this->render("/category/form.html.twig", [
             "categoryForm" => $categoryForm->createView()
         ]);

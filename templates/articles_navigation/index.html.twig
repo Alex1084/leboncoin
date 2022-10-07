@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ArticlesNavigationController!{% endblock %}
+
+{% block body %}
+
+
+    <h1>Liste des articles</h1>
+
+    {{ form_start(ArticleSearchForm) }}
+
+        {{ form_widget(ArticleSearchForm) }}
+
+        <button type="submit" class="btn">Valider</button>
+    {{ form_end(ArticleSearchForm) }}
+
+
+    {% for article in articles %}
+        <article>
+            <h2>{{article.name}}</h2>
+            <h3>à {{article.citName}}</h3>
+            <h4>{{article.catName}}</h4>           
+            <p>{{article.price}} €</p>
+            <p>Description : {{article.description}}</p>
+            <p>Vendu par : {{article.uName}}</p>
+        </article>
+	{% endfor %}
+
+{% endblock %}
