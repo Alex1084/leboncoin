@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/category', name: 'app_category_')]
+#[Route('/admin/category', name: 'app_category_')]
 class CategoryController extends AbstractController
 {
 
