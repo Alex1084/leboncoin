@@ -19,6 +19,12 @@ class City
     #[ORM\Column(length: 10)]
     private ?string $zipcode = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?float $latitude = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $longitude = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -51,5 +57,29 @@ class City
     public function __toString(): string 
     {
         return $this->getZipcode() . " " . $this->getCityName();
+    }
+
+    public function getLatitude(): ?float
+    {
+        return $this->latitude;
+    }
+
+    public function setLatitude(?float $latitude): self
+    {
+        $this->latitude = $latitude;
+
+        return $this;
+    }
+
+    public function getLongitude(): ?float
+    {
+        return $this->longitude;
+    }
+
+    public function setLongitude(?float $longitude): self
+    {
+        $this->longitude = $longitude;
+
+        return $this;
     }
 }

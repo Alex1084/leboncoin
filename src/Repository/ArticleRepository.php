@@ -46,7 +46,7 @@ class ArticleRepository extends ServiceEntityRepository
     /**
      * @Route("Route", name="RouteName")
      */
-    public function search($search = null, $category = null, $city = null)
+    public function search($search = null, $category = null, $city = null, $rayon = 0)
     {
         /*
          * Requête dans la bdd avec trois paramètres
@@ -55,21 +55,29 @@ class ArticleRepository extends ServiceEntityRepository
                     ->select("a.name, a.price, a.description, a.id, ci.city_name as citName, ca.name as catName, u.first_name as uName")
                     ->join(Category::class, 'ca', Join::WITH, "a.category = ca.id")
                     ->join(City::class, 'ci', Join::WITH, "ci.id = a.city")
-                    ->join(User::class, 'u', Join::WITH, "u.id = a.user");
+                    ->join(User::class, 'u', Join::WITH, "u.id = a.user")
+                    ->where("a.deleted_at is null")
+;
 
         if ($category) {
-            $query->where("ca.id = :category") // :nom_param évite les injections sql
+            $query->andWhere("ca.id = :category") // :nom_param évite les injections sql
             ->setParameter("category", $category);
         }
         
         if ($city) {
-            $query->andWhere("ci.id = :city")->setParameter("city", $city); // andWhere permet d'ajouter une autre condition sans écraser la précédente
+            // $query->andWhere("ci.id = :city")->setParameter("city", $city->getId());
+            $query->addSelect("(ACOS(SIN(PI()*ci.latitude/180.0)*SIN(PI()*:lat2/180.0)+COS(PI()*ci.latitude/180.0)*COS(PI()*:lat2/180.0)*COS(PI()*:lon2/180.0-PI()*ci.longitude/180.0))*6371) AS dist")
+            ->setParameter(":lat2", $city->getLatitude())
+            ->setParameter(":lon2", $city->getLongitude())
+            ->andHaving("dist <= :rayon")
+            ->setParameter("rayon", $rayon); // andWhere permet d'ajouter une autre condition sans écraser la précédente
         }
               
         if ($search) {
             $query->andWhere("a.name LIKE :search")->setParameter("search", "%$search%");
         }
-        
+
+        // dd($query->getQuery());
         return $query   ->getQuery() // Génère la requête
                         ->getResult(); // Renvoie les résultats
     }

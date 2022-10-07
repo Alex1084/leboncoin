@@ -22,9 +22,8 @@ class ArticlesNavigationController extends AbstractController
         $articleForm->handleRequest($request);
 
         if ($articleForm->isSubmitted() && $articleForm->isValid()){
-            $articles = $doctrine->getRepository(Article::class)->search($articleForm->getData()["search"], $articleForm->getData()["category"], $articleForm->getData()["city"]);
-
-            //dd($articles);
+            $articles = $doctrine->getRepository(Article::class)->search($articleForm->get("search")->getData(), $articleForm->get("category")->getData(), $articleForm->get("city")->getData(), $articleForm->get("rayon")->getData());
+            // dd($articles);
         }
         else {
             $articles = $doctrine->getRepository(Article::class)->search();
