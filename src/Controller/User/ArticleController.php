@@ -26,7 +26,7 @@ class ArticleController extends AbstractController
 
         $articleForm->handleRequest($request);
         if ($articleForm->isSubmitted() && $articleForm->isValid()) {
-            $article->setUserId($user)->setCreatedAt(new DateTimeImmutable());
+            $article->setUser($user)->setCreatedAt(new DateTimeImmutable());
 
             $em->persist($article);
             $em->flush();
@@ -47,7 +47,7 @@ class ArticleController extends AbstractController
             return $this->redirectToRoute("app_home");
         }
         $user = $this->getUser();
-        if (!$user || $user !== $article->getUserId() ) {
+        if (!$user || $user !== $article->getUser() ) {
             // $this->addFlash("error", "vous ne pouvez pas");
             return $this->redirectToRoute("app_login");
         }
@@ -56,7 +56,7 @@ class ArticleController extends AbstractController
 
         $articleForm->handleRequest($request);
         if ($articleForm->isSubmitted() && $articleForm->isValid()) {
-            $article->setUserId($user)->setUpdatedAt(new DateTimeImmutable());
+            $article->setUser($user)->setUpdatedAt(new DateTimeImmutable());
 
             $em->persist($article);
             $em->flush();
@@ -76,7 +76,7 @@ class ArticleController extends AbstractController
             $this->addFlash("error", "vous n'êtes pas connécter");
             return $this->redirectToRoute("app_login");
         }
-        $articles = $em->getRepository(Article::class)->findBy(["user_id" => $user, "deleted_at" => null]);
+        $articles = $em->getRepository(Article::class)->findBy(["user" => $user, "deleted_at" => null]);
         return $this->render('user/article/list-by-user.html.twig', [
             "articles" => $articles
         ]);
@@ -91,7 +91,7 @@ class ArticleController extends AbstractController
             return $this->redirectToRoute("app_home");
         }
         $user = $this->getUser();
-        if (!$user || $user !== $article->getUserId() ) {
+        if (!$user || $user !== $article->getUser() ) {
             return $this->redirectToRoute("app_login");
         }
         $article->setDeletedAt(new DateTimeImmutable());

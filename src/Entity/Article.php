@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ArticleRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -43,6 +45,14 @@ class Article
     #[ORM\ManyToOne(inversedBy: 'articles')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
+
+    #[ORM\OneToMany(mappedBy: 'article', targetEntity: ArticleImage::class)]
+    private Collection $images;
+
+    public function __construct()
+    {
+        $this->images = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -153,6 +163,36 @@ class Article
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ArticleImage>
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImages(ArticleImage $articleImage): self
+    {
+        if (!$this->images->contains($articleImage)) {
+            $this->images->add($articleImage);
+            $articleImage->setArticle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImages(ArticleImage $articleImage): self
+    {
+        if ($this->images->removeElement($articleImage)) {
+            // set the owning side to null (unless already changed)
+            if ($articleImage->getArticle() === $this) {
+                $articleImage->setArticle(null);
+            }
+        }
 
         return $this;
     }

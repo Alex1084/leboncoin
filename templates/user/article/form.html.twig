@@ -6,6 +6,13 @@
 
 {{ form_start(articleForm) }}
 	{{ form_widget(articleForm) }}
+	<h3>Tags</h3>
+    <ul class="tags">
+        {% for image in articleForm.images %}
+            <li>{{ form_row(image.image) }}</li>
+        {% endfor %}
+    </ul>
+	<button type="button" class="add_item_link" data-collection-holder-class="tags">Add a tag</button>
 	<button type="submit" class="btn">Valider</button>
 {{ form_end(articleForm) }}
 
