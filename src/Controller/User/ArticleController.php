@@ -27,6 +27,8 @@ class ArticleController extends AbstractController
         $articleForm->handleRequest($request);
         if ($articleForm->isSubmitted() && $articleForm->isValid()) {
             $article->setUser($user)->setCreatedAt(new DateTimeImmutable());
+            dd($article);
+            // foreach()
 
             $em->persist($article);
             $em->flush();

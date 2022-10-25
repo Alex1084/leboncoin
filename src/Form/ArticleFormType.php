@@ -26,12 +26,8 @@ class ArticleFormType extends AbstractType
                 "prototype" => true,
                 // 'allow_delete' => true,
                 'by_reference' => false,
-                // "mapped" => false
-                'prototype_options' => [
-                    "attr" => [
-                        "data-hello" => "abcdef",
-                    ]
-                ]
+                "mapped" => true,
+                "by_reference" => false,
             ])
         ;
     }
