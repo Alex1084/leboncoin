@@ -3,17 +3,22 @@
 {% block title %}Hello CityController!{% endblock %}
 
 {% block body %}
+<div data-controller="hello" data-hello-count="{{articleForm.images|length}}">
+    {{ form_start(articleForm) }}
+        {{ form_widget(articleForm) }}
+        <h3>Images</h3>
+        <ul class="images">
+            {% for image in articleForm.images %}
+            {# {{ form_row(articleForm.images.vars.prototype) }} #}
 
-{{ form_start(articleForm) }}
-	{{ form_widget(articleForm) }}
-	<h3>Tags</h3>
-    <ul class="tags">
-        {% for image in articleForm.images %}
-            <li>{{ form_row(image.image) }}</li>
-        {% endfor %}
-    </ul>
-	<button type="button" class="add_item_link" data-collection-holder-class="tags">Add a tag</button>
-	<button type="submit" class="btn">Valider</button>
-{{ form_end(articleForm) }}
+                {# <li>{{ form_row(image.image) }}</li> #}
+            {% endfor %}
+        </ul>
+        <div data-hello-target="output">
+        </div>
+        <button type="button" class="add_item_link" data-action="click->hello#addImage">Add a image</button> <br>
+        <button type="submit" class="btn">Valider</button>
+    {{ form_end(articleForm) }}
+</div>
 
 {% endblock %}
