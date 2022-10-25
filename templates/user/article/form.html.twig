@@ -8,10 +8,9 @@
         {{ form_widget(articleForm) }}
         <h3>Images</h3>
         <ul class="images">
-            {% for image in articleForm.images %}
-            {# {{ form_row(articleForm.images.vars.prototype) }} #}
+            {% for image in article.images %}
 
-                {# <li>{{ form_row(image.image) }}</li> #}
+                <li><img src="{{asset("upload/article/" ~ image.image)}} " alt="" height="200"></li>
             {% endfor %}
         </ul>
         <div data-hello-target="output">

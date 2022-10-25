@@ -24,10 +24,10 @@ class ArticleFormType extends AbstractType
                 'label' => "image",
                 "allow_add" => true,
                 "prototype" => true,
-                // 'allow_delete' => true,
-                'by_reference' => false,
+                'allow_delete' => true,
+                // 'by_reference' => false,
                 "mapped" => true,
-                "by_reference" => false,
+                'required' => false
             ])
         ;
     }

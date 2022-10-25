@@ -3,7 +3,9 @@
 namespace App\Controller\User;
 
 use App\Entity\Article;
+use App\Entity\ArticleImage;
 use App\Form\ArticleFormType;
+use App\Services\UploadService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ArticleController extends AbstractController
 {
     #[Route('/article/add', name: 'app_article_add')]
-    public function addArticle(EntityManagerInterface $em, Request $request): Response
+    public function addArticle(EntityManagerInterface $em, Request $request, UploadService $uploadService): Response
     {
         $user = $this->getUser();
         if (!$user) {
@@ -27,9 +29,15 @@ class ArticleController extends AbstractController
         $articleForm->handleRequest($request);
         if ($articleForm->isSubmitted() && $articleForm->isValid()) {
             $article->setUser($user)->setCreatedAt(new DateTimeImmutable());
-            dd($article);
-            // foreach()
-
+            foreach ($articleForm->get("images")->getData() as $imageFile) {
+                if ($imageFile !== null) {
+                    // dump($image);
+                    $filename = $uploadService->upload($imageFile["image"], "article");
+                    $image = new ArticleImage();
+                    $image->setImage($filename);
+                    $article->addImages($image);
+                }
+            }
             $em->persist($article);
             $em->flush();
             $this->addFlash("succes", "votre article est desomais disponible a la vente");
@@ -41,7 +49,7 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/article/update/{id}', name: 'app_article_update')]
-    public function updateArticle(int $id, EntityManagerInterface $em, Request $request): Response
+    public function updateArticle(int $id, EntityManagerInterface $em, Request $request, UploadService $uploadService): Response
     {
         $article = $em->getRepository(Article::class)->find($id);
         if (!$article || $article->getDeletedAt() !== null) {
@@ -59,14 +67,23 @@ class ArticleController extends AbstractController
         $articleForm->handleRequest($request);
         if ($articleForm->isSubmitted() && $articleForm->isValid()) {
             $article->setUser($user)->setUpdatedAt(new DateTimeImmutable());
-
+            foreach ($articleForm->get("images")->getData() as $imageFile) {
+                if ($imageFile !== null) {
+                    // dump($image);
+                    $filename = $uploadService->upload($imageFile["image"], "article");
+                    $image = new ArticleImage();
+                    $image->setImage($filename);
+                    $article->addImages($image);
+                }
+            }
             $em->persist($article);
             $em->flush();
             $this->addFlash("succes", "votre article est desomais disponible a la vente");
             return $this->redirectToRoute("app_home");
         }
         return $this->render('user/article/form.html.twig', [
-            "articleForm" => $articleForm->createView()
+            "articleForm" => $articleForm->createView(),
+            "article" => $article
         ]);
     }
 
