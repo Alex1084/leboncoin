@@ -10,3 +10,4 @@ import './styles/app.css';
 
 // start the Stimulus application
 import './bootstrap';
+import './controllers/favorite_controller'
